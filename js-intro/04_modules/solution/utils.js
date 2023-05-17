@@ -10,5 +10,5 @@ export function birthday(persons, name) {
 }
 
 export function greeter({ name }) {
-  console.log(`Hello, ${name}`);
+  return `Hello, ${name}`;
 }

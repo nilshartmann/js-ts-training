@@ -1,9 +1,9 @@
 {
-  "name": "react18-training",
+  "name": "js-ts-training",
   "version": "1.0.0",
-  "description": "Dieses Repository enthält Materialen zu meinen React Trainings.",
+  "description": "JavaScript/TypeScript Training",
   "scripts": {
-    "start": "http-server . -p 3030 -o 2023-03-06-react-testen-context-graphql.html#/t-context"
+    "start": "http-server . -p 3030 -o 2023-05-22-react-typescript.html"
   },
   "repository": {
     "type": "git",

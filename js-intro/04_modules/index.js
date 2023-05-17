@@ -5,7 +5,6 @@ console.log("Please edit index.js");
 //    birthday und greeter: in diesem Verzeichnis in "utils.js". Exportiere sie dort jeweils mit einem
 //      benannten Export
 // 2. IMPORTIERE die drei Funktionen in dieser Datei
-//     Die Datei sollte danach ausführbar sein (wie gewohnt im Browser index.html refreshen)
 
 function createPerson({ name, age = 18 }, additionalData) {
   return { name, age, ...additionalData };
@@ -23,7 +22,7 @@ function birthday(persons, name) {
 }
 
 function greeter({ name }) {
-  console.log(`Hello, ${name}`);
+  return `Hello, ${name}`;
 }
 
 const klaus = createPerson({ name: "Klaus", age: 34 });
