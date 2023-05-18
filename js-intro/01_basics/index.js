@@ -18,3 +18,9 @@ console.log("Please edit index.js");
 //     - Für helloWorld(2021) sollte "" erscheinen
 //     - Für helloWorld() sollte "" erscheinen
 //
+// 3. Erweitere die Funktion
+//     - Wenn der übergebene Parameter eine (Callback-)Funktion (!) ist, soll diese Funktion den Namen
+//       der zu grüßenden Person zurückliefern
+//     - Wenn der Parameter eine Callback-Funktion ist, rufe also die Callback-Funktion auf und "grüße"
+//       den zurückgelieferten Namen
+//     - Für helloWorld( () => "Susi" ) sollte "Hallo, Susi" erscheinen
