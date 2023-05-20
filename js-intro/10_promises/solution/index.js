@@ -2,13 +2,12 @@
 
 // loadGreetingFromServer liefert ein Objekt mit einen Gruß für den Namen zurück,
 // oder einen Fehler wenn kein name angegeben wurde.
-//  Diese Funktion ist "fertig", die musst Du nur verwenden.
 //
-// Im Erfolgsfall liefert die Funktion ein Promise zurückgegeben, das zum folgenden
+// Im Erfolgsfall wird ein Promise zurückgegeben, das zum folgenden
 // Objekt aufgelöst wird { phrase: ..., name: ... }
 
 // 1. Vervollständige getGreetingAsString (s.u.)
-// 2. Vervollständige die Aufrufe von getGreetingAsString (s.u.)
+// 2.
 
 function loadGreetingFromServer(name) {
   // Diese Funktion steht exemplarisch für eine asynchrone Funktion,
@@ -37,17 +36,22 @@ function getGreetingAsString(name) {
   //   - im Erfolgsfall einen String zurückliefern, in dem die Daten des von
   //     loadGreetingFromServer zurückgelieferte Greeting-Objekts enthalten sind
   //   - im Fehlerfall einen String zurückliefern mit einer Fehlermeldung
-  //
-  // Du kannst Promise-Ketten oder async/await API verwenden
+  return loadGreetingFromServer(name)
+    .then(object => `${object.phrase} ${object.name}`)
+    .catch(error => `Could not greet ${name}: ${error}`);
 }
 
 // Führe getGreetingAsString aus und gib das Ergebnis auf der Konsole aus
 //   - Im ersten Fall ("Susi") sollte eine Meldung mit dem Gruß erscheinen
 //   - Im zweiten Fall ("null") sollte eine Fehlermeldung erscheinen
 //
-// Zusatz-Aufgabe:
-//  - kannst Du sicherstellen, dass die Ausgabe für Susi *immer* vor der Ausgabe
-//    von "null" auf der Konsole erscheint?
+getGreetingAsString("Susi").then(result => console.log(result));
+getGreetingAsString(null).then(result => console.log(result));
 
-getGreetingAsString("Susi");
-getGreetingAsString(null);
+// Hier ist eine Liste von Namen, die alle mit "getGreetingAsString"
+//   gegrüßt werden sollen.
+// Das Ergebnis (alle Grüße) sollen auf einmal ausgegeben werden,
+//  sobald ALLE Grüße erzeugt worden sind. Wie geht das?
+const names = ["Klaus", "Susi", "Ursel"];
+
+Promise.all(names.map(n => getGreetingAsString(n))).then(greetings => console.log(greetings));

@@ -3,6 +3,8 @@ console.log("Please edit index.js");
 import createPerson from "./person/createPerson.js";
 import { birthday, greeter } from "./utils.js";
 
+import { sayHello } from "./m.cjs";
+console.log("sayHello", sayHello());
 const klaus = createPerson({ name: "Klaus", age: 34 });
 const susi = createPerson({ name: "Susi" });
 const walter = createPerson({ name: "Walter", age: 42 }, { city: "Hamburg", street: "Reeperbahn" });

@@ -1,9 +1,11 @@
 console.log("Please edit index.js");
 
 // 1. VERSCHIEBE DIE FOLGENDEN FUNKTIONEN IN EIGENE MODULE
-//    createPerson: nach person/createPerson.js. Exportiere createPerson dort mit einem Default Export
-//    birthday und greeter: in diesem Verzeichnis in "utils.js". Exportiere sie dort jeweils mit einem
-//      benannten Export
+//    createPerson: nach person/createPerson.js.
+//      - Exportiere "createPerson" dort mit einem Default Export
+//    birthday und greeter: in das Modul "utils.js".
+//      - Exportiere sie dort jeweils mit einem benannten Export
+
 // 2. IMPORTIERE die drei Funktionen in dieser Datei
 
 function createPerson({ name, age = 18 }, additionalData) {

@@ -117,20 +117,33 @@
           </p>
 
           <p class="fragment">
-            Ich zeige viel direkt im Editor, aber ihr könnt die Slides als Referenz benutzen
-          </p>
-          <p class="fragment">
-            Wir machen zwischendurch Übungen, in denen ihr selbst programmieren könnt
+            Wir machen zwischendurch kleine Übungen, in denen ihr selbst programmieren könnt
           </p>
         </section>
 
         <section data-markdown>
           <textarea data-template>
 ### Zeitplan
-* 22. / 23. Mai
+* Mo. 22. / Di. 23. Mai
 * Jeweils 8:30 Uhr bis 16:00 Uhr, jeweils derselbe Zoom-Link
 * Mittagspause: 12:00 bis 13 Uhr 🍕 🍝
   * Kürzere Pausen zwischendurch ☕️ 😴
+---
+### Agenda
+* [JavaScript Sprachgrundlagen](#/t-javascript)  
+  * Typen
+  * Objekte und Arrays
+  * Funktionen
+  * Klassen und Closures
+  * Module
+* [Asynchrone Programmierung mit Promises](#/t-promises)  
+* [TypeScript](#/t-typescript)
+  * Grundlagen
+  * ...
+* In den ersten Teilen beschäftigen wir uns "nur" mit JavaScript, ohne TypeScript
+  * Syntax, Konzepte und Verhalten bleiben mit TypeScript identisch
+  
+
           </textarea>
         </section>
 
@@ -726,15 +739,10 @@ person.livesIn // undefined
             >. Darin kannst Du auch deinen Code schreiben.
           </p>
           <p class="fragment">
-            Du kannst
-            <b><code>js-intro/02_objects_and_arrays/index.html</code></b> in deinem Browser öffnen.
-            Diese Datei führt die <b><code>index.js</code></b
-            >-Datei dann aus.
+            Du kannst die Datei mit <code>node index.js</code> von der Konsole ausführen.
           </p>
-          <p class="fragment">
-            Ausgaben auf der Browser-Konsole, nach dem Ändern von <code>index.js</code>, die Seite
-            im Browser neu laden
-          </p>
+          <p class="fragment">Ausgaben erfolgen auf der Konsole.</p>
+
           <p class="fragment">Bei Fragen oder Problemen, kannst Du dich jederzeit melden</p>
           <p class="fragment">
             Wenn alle Stricke reißen, findest Du eine mögliche Lösung in:
@@ -1176,15 +1184,9 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
             >. Darin kannst Du auch deinen Code schreiben.
           </p>
           <p class="fragment">
-            Du kannst
-            <b><code>js-intro/03_objects/index.html</code></b> in deinem Browser öffnen. Diese Datei
-            führt die <b><code>index.js</code></b
-            >-Datei dann aus.
+            Du kannst die Datei mit <code>node index.js</code> von der Konsole ausführen.
           </p>
-          <p class="fragment">
-            Ausgaben auf der Browser-Konsole, nach dem Ändern von <code>index.js</code>, die Seite
-            im Browser neu laden
-          </p>
+          <p class="fragment">Ausgaben erfolgen auf der Konsole.</p>
           <p class="fragment">Bei Fragen oder Problemen, kannst Du dich jederzeit melden</p>
           <p class="fragment">
             Wenn alle Stricke reißen, findest Du eine mögliche Lösung in:
@@ -1193,82 +1195,6 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
           <p class="fragment">Wenn Du fertig bist, bitte "Hand heben" in Zoom 🙋‍♀️</p>
         </section>
 
-        <!-- =============================================================================
-        <section>
-          <h3>Weitere Operatoren</h3>
-
-          <p>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR"
-              >OR</a
-            >
-          </p>
-
-          <pre class="fragment"><code class="javascript">
-              const winter = true;
-              const summer = false;
-              const spring = false;
-              const isWinterOrSummer = winter || summer; // true
-              const isSummerOrSpring = summer || spring; // false 
-
-            </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-            // Mit nicht-boolean-Werten
-            const name = "Peter";
-            const age = 32;
-            const oneOrTheOther = name || age; // Peter
-          </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-            // Mit nicht-boolean-Werten
-            const name = "";
-            const age = 32;
-            const oneOrTheOther = name || age; // ???
-          </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-            // OR...?
-            const name = "";
-            const age = 0;
-            const what = name || age; // ????
-          </code></pre>
-        </section>
-
-        <section>
-          <h3>Weitere Operatoren</h3>
-          <p>
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND"
-              >AND</a
-            >
-          </p>
-          <p>Liefert den zweiten Wert zurück (oder ersten Wert, wenn erster Wert falsy)</p>
-
-          <pre class="fragment"><code class="javascript">
-            const winter = true;
-            const summer = false;
-            const winterAndSummer = winter && summer; // false; 
-          </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-            const firstname = "Susi";
-            const lastname = "Meier"
-            const name = firstname && lastname; // Susi
-          </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-            const firstname = "";
-            const lastname = "Meier"
-            const firstnameAndLastNameSpecified = firstname && lastname; // "" 😝
-          </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-            const firstname = "Abc";
-            const lastname = "Meier"
-            const firstnameAndLastNameSpecified = !!(firstname && lastname); // true 😝
-          </code></pre>
-        </section> -->
         <section data-markdown>
           <textarea data-template>
 ### Klassen
@@ -1307,7 +1233,8 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
   }
   ```
 
-* Es kann max. einen Konstruktor geben, der `constructor` heisst
+* Es kann max. einen Konstruktor geben
+  * Der Konstruktur muss `constructor` heißen
 
 
 
@@ -1613,7 +1540,6 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
 
 ---
 ### Typ von Funktionen
-<!-- .element: class="todo" -->eventuell raus
 * Eine `function` ist eine "Unterklasse" eines Objekts in in JavaScript und kein eigener Datentyp
 * ```typescript
   function greet(msg) {
@@ -1656,9 +1582,42 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
         <!-- ============================================================================= -->
         <section>
           <h3>Module</h3>
-          <p>Mit Modulen sind Dateiinhalte nicht mehr global sichtbar</p>
           <p>Module bestimmen explizit, was außerhalb verwendet werden darf</p>
           <p>Module geben explizit an, was sie aus anderen Modulen verwenden wollen</p>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+### Modulsysteme: Common JS vs ECMAScript Module
+* Das ECMAScript (oder JavaScript) Modul System (ESM) kam erst 2015 in die Sprache
+* Common JS ist das Modulsystem von Node.JS
+* Node.JS unterstützt mittlerweile aber auch das JavaScript Modulsystem
+  * Auch TypeScript unterstützt beide Modulsysteme
+  * Ihr müsst Euch für das Ausgabe-Format entscheiden (CommonJS oder ESM)
+* Auch wenn das CommonJS Modulsystem nicht eingestellt wird, geht die Tendenz zu ESM
+  * Viele Bibliotheken bieten mittlerweile beide Formate (oder nur noch ESM) an
+---
+### Unterschiede und Gemeinsamkeiten
+* In beiden Modulsystem ist ein **Modul** eine **Datei**
+  * In Java und anderen Programmiersprachen ist ein Modul tendenziell eine Sammlung von Dateien/Klassen
+* Externe Bibliotheken werden als **Packages** zur Verfügung gestellt (npm: node *package* manager)
+  * Die Bibliotheken können ihren Code für ein oder mehrere Modulsysteme zur Verfügung stellen
+* CommonJS Module werden synchron geladen, ES Module hingegen asynchron
+  * Das macht einen Mischbetrieb für die Laufzeitumgebung komplex
+* CommonJS Module funktionieren nicht im Browser 
+* CommonJS flexibler, `require` kann überall verwendet werden, `import` nur am Beginn einer Datei
+---
+### Das JavaScript Modulsystem
+* Das JavaScript Modulsystem könnt ihr verwenden, wenn ihr:
+  * in Eurer `package.json`-Datei den `type`-Eintrag auf `module` setzt
+    * ```json
+      {
+        "type": "module"
+      }
+      ```
+  * oder in Dateien, die die Endung `.mjs` tragen         
+  </textarea
+          >
         </section>
 
         <!-- ============================================================================= -->
@@ -1671,7 +1630,6 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
               <b>importiert</b> werden</em
             >
           </p>
-          <p class="fragment">Eine <code>export</code>-Anweisung macht aus einer Datei ein Modul</p>
 
           <pre class="fragment"><code class="javascript">
             // src/domain/Person.js
@@ -1705,6 +1663,15 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
           <h3>Module</h3>
           <h4>Importieren</h4>
           <p class="fragment">Beim importieren geben wir Pfade(!) an</p>
+          <p class="fragment">
+            Die Endung <code>.js</code> wird auch verwendet, wenn die importierte Datei eine
+            TypeScript-Datei ist!
+          </p>
+          <p class="fragment">
+            Wenn in der <code>package.json</code>-Datei als <code>type</code> <b>nicht</b>
+            <code>module</code> eingetragen ist, müssen die Dateien die Endung
+            <code>.mjs</code> haben
+          </p>
 
           <pre class="fragment"><code class="javascript">
               // src/domain/Person.js
@@ -1778,7 +1745,7 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
             <li class="fragment">Wenn Du die Seite geöffnet hast, bitte "Hand heben" in Zoom 🙋‍♀️</li>
           </ol>
         </section>
-
+ -->
         <section>
           <h2>Übung: Module</h2>
 
@@ -1787,41 +1754,672 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
             <b><code>js-intro/04_modules/index.js</code></b
             >. Darin kannst Du auch deinen Code schreiben.
           </p>
-          <p class="fragment">
-            Du kannst
-            <b><code>js-intro/04_modules/index.html</code></b> in deinem Browser öffnen. Diese Datei
-            führt die <b><code>index.js</code></b
-            >-Datei dann aus.
-          </p>
-          <p class="fragment">
-            Ausgaben auf der Browser-Konsole, nach dem Ändern von <code>index.js</code>, die Seite
-            im Browser neu laden
-          </p>
+          <p class="fragment">Du kannst die Anwendung mit <code>node index.js</code> ausführen.</p>
+          <p class="fragment">Alle Ausgaben erfolgen im Terminal auf der Konsole.</p>
           <p class="fragment">Bei Fragen oder Problemen, kannst Du dich jederzeit melden</p>
           <p class="fragment">
             Wenn alle Stricke reißen, findest Du eine mögliche Lösung in:
             <code>js-intro/04_modules/solution/</code>
           </p>
           <p class="fragment">Wenn Du fertig bist, bitte "Hand heben" in Zoom 🙋‍♀️</p>
-        </section>  -->
+        </section>
         <!-- ============================================================================= -->
+
         <section data-markdown>
           <textarea data-template>
-### Modulsysteme: Common JS vs ECMAScript Module
+<!-- .slide: id="t-promises" -->            
+### Asynchrone Programmierung mit JavaScript
+* JavaScript ist single-threaded
+* Jeder Code, den wir ausführen ist erstmal blockierend
+* Threads wie in Java gibt es nicht
+* Um asynchronen Code auszuführen, gibt es zwei Möglichkeiten
+  * Promise API und async/await (JavaScript Sprach Standard)
+  * Callback-API von Node.JS
+---
+### Hintergrund: Node.JS Callback API
+* Promises wurden erst 2015 in die JavaScript Sprache aufgenommen
+  * async/await sogar noch später, 2017
+* Node.JS hat aus diesem Grund das Callback-Pattern bekannt gemacht
+* Hier wird einer Funktion, die asynchron arbeiten soll, eine Callback-Funktion übergeben
+  * Die Callback-Funktion ist jeweils der letzte Parameter, der übergeben wird
+  * ```typescript
+    function readFile(filename, callbackFn) { /* ... */ }
+    ```
+  
+  * Diese Funktion wird entweder mit einem Fehler oder dem Ergebnis augefrufen
+  * Das Ergebnis war die "Callback-Hölle" 😈
+  * ```typescript
+    readFile("helloWorld.txt", (err, data) => {
+      if (data) {
+        parseLines(data, (err, lines) => {
+          if (lines) {
+            countWords(lines, (err, lines) => {
+              // ...
+            })
+          }
+        })
+      }
+    })
+    ```
+  
 
-* Common JS ist das Modulsystem von Node.JS
-* Node.JS unterstützt mittlerweile aber auch das JavaScript Modulsystem
-* Probleme kann es geben, wenn beide Modulsystem
----
-### Unterschiede
-* CommonJS Module werden synchron geladen, ES Module hingegen asynchron
-  * Das macht einen Mischbetrieb für die Laufzeitumgebung komplex
-* CommonJS Module funktionieren nicht im Browser 
-* CommonJS flexibler, `require` kann überall verwendet werden, `import` nur am Beginn einer Datei
----
-### Dateiendung vs. package.json
-* 
           </textarea>
+        </section>
+        <section>
+          <h3>Promises in JavaScript</h3>
+
+          <p class="fragment">
+            Ein Promise liefert einen "Versprechen" auf einen Wert zurück, der evtl. erst in der
+            Zukunft ermittelt werden kann
+          </p>
+          <p class="fragment">
+            Damit können wir asynchrones Verhalten in JavaScript Applikation abbilden
+          </p>
+          <pre class="fragment"><code class="javascript" contenteditable>
+// "getNameAsync" ist eine ausgedachte Funktion, 
+// die ein Promise zurückliefert, 
+// das "irgendwann" den String "Klaus" zurückgibt
+const promise = getNameAsync();
+  </code></pre>
+          <pre
+            class="fragment"
+          ><code class="javascript" contenteditable>promise.then(name => console.log(name));
+// Ausgabe "irgendwann": "Klaus"
+  </code></pre>
+        </section>
+
+        <section>
+          <h3>Promises</h3>
+          <p>Promises können verkettet werden</p>
+          <pre><code class="javascript" contenteditable>
+// Annahme: 'getNameAsync' liefert "irgendwann" den String "Klaus" zurück
+const promise = getNameAsync()
+
+// Wird mit dem ersten Wert aufgerufen und gibt neuen Wert zurück
+.then(name => getGreetingAsync(name)) 
+
+// wird mit dem zweiten Wert (aus vorherigem then) aufgerufen
+.then(greeting => console.log(greeting));
+
+// Ausgabe "irgendwann": 
+// "Hello, Klaus"
+
+  </code></pre>
+          <p class="fragment">
+            Die <code>then</code>-Funktion gibt <b>immer</b> ein Promise zurück
+          </p>
+        </section>
+
+        <section>
+          <h3>Fehlerbehandlung</h3>
+          <h4>Mit <code>catch()</code> kann man Fehler fangen und darauf reagieren</h4>
+          <pre class="fragment"><code class="javascript" contenteditable>
+  const promise = getNameAsync()
+
+    .then(name => { if (name === null) throw new Error("No name found") })
+
+    .then(greeting => console.log(greeting));
+
+    .catch(error => console.error(`Greeting failed: ${error}`))
+  
+    // Wenn 'getNameAsync' null zurückliefert ist die Ausgabe:
+    //   Greeting failed: No name found
+    </code></pre>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section>
+          <h3>Finally</h3>
+
+          <p class="fragment">
+            Eine <code>finally</code>-Callback-Funktion wird nach dem letzten <code>then</code> bzw.
+            <code>catch</code>-Block ausgeführt.
+          </p>
+
+          <p class="fragment">
+            Die finally-Funktion wird <b>immer</b> ausgeführt (unabhängig davon, ob vorher ein
+            Fehler aufgetreten ist oder nicht
+          </p>
+
+          <pre class="fragment"><code class="javascript" contenteditable>
+              const promise = getNameAsync();
+
+                .then(name => { if (name === null) throw new Error("No name found") })
+
+                .then(greeting => console.log(greeting));
+
+                .catch(error => console.error(`Greeting failed: ${error}`))
+
+                .finally( () => console.log("Goodbye!") );
+              
+                // Output (error): Greeting failed: No name found
+                // Output (log): Goodbye!
+                </code></pre>
+        </section>
+
+        <section>
+          <h3>Promise.all</h3>
+
+          <p class="fragment">
+            Mit
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"
+              >Promise.all</a
+            >
+            kannst Du auf eine Liste von Promises warten
+          </p>
+
+          <p class="fragment">
+            Die Funktion wird nur ausgeführt, wenn alle übergebenen Promises aufgelöst werden
+            konnten
+          </p>
+
+          <pre class="fragment"><code class="javascript" contenteditable>
+              const user = loadUserAsync(); // gibt Promise zurück
+              const newsFeed = loadNewsFeedAsync(); // gibt Promise zurück
+
+              Promise.all(user, newsFeed)
+                .then(result => {
+                  const loadedUser = result[0];
+                  const newsFeed = result[1];
+
+                  return { user: loadedUser, news: newsFeed };
+                });
+                </code></pre>
+
+          <p class="fragment">
+            Verwandt:
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any"
+              >Promise.any</a
+            >
+            und
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"
+              >Promise.allSettled</a
+            >
+          </p>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+### Promises erzeugen
+* In der Regel werdet ihr API-Funktionen aufrufen, die ein Promise zurückliefern
+* Ihr könnt aber mit dem Promise-Konstruktor auch eigene Promises erzeugen
+* Dem Konstruktor übergebt ihr eine Callback-Funktion, in der ihr Eure Logik implementiert
+  * Diese Funktion wird von JavaScript mit zwei Parametern aufgerufen:
+    * `resolve`-Funktion. Die ruft ihr mit dem ermittelten Wert auf
+      * Mit dem übergebenen Wert wird dann die erste `then`-Funktion aufgerufen
+    * `reject`-Funktion: die ruft ihr (mit einem Fehler) auf, wenn ihr den Wert nicht ermitteln konntet
+      * Mit dem übergebenen Wert wird dann die erste `catch`-Funktion aufgerufen             
+* ```typescript
+  const p = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      return resolve("Zeit ist abgelaufen")
+      });
+    }, timeout);
+  });
+  ```
+---
+### Promises in Node.JS
+* Die API von Node.JS verwendet für Asynchronität das Callback-Pattern `(err, data) => { ... }`
+* Mit [`util.promisify`](https://nodejs.org/dist/latest-v8.x/docs/api/util.html#util_util_promisify_original)
+könnt ihr eine Node.JS-Funktion, die dem Callback-Pattern folgt, in eine Funktion mit Promises "konvertieren"
+* Wichtig ist, das die an `promisify` übergebene Funktion die Callback-Funktion als letzten Parameter erwartet
+* Callback-Pattern:
+  * ```typescript
+    function loadData(filename, callback) { /* ... */ }
+
+    loadData("hallo.txt", (err, data) => { /* ... */ })
+    ```
+* Mit `promisify`:
+  * ```typescript
+    const util = require('util');
+    
+    function loadData(filename, callback) { /* ... */ }
+    
+    const loadDataPromise = util.promisify(loadData);
+
+    loadDataPromise("hallo.txt")
+      .then(data => /* ... */ );
+    ```
+          </textarea>
+        </section>
+
+        <section>
+          <h2>async / await</h2>
+          <p>"Nur" eine andere Art/API, um mit Promises zu arbeiten</p>
+          <p>Erlaubt es, asynchronen Code "linear" hinzuschreiben</p>
+        </section>
+        <section>
+          <h3>async / await</h3>
+          <p><code>await</code> wartet bis ein Promise aufgelöst wird</p>
+          <pre class="fragment"><code class="javascript" contenteditable data-trim>
+    function greet(name) { return new Promise(...); }
+    
+    // await can only be used in 'async'-functions:
+    async function sayWhat(name) {
+      const greeting = await greet(name);
+    
+      // greeting is a string!
+      console.log(greeting); // => Hello, ...
+    }
+                      </code></pre>
+        </section>
+        <section>
+          <h3>async / await</h3>
+          <p><code>async</code> machen eine Funktion zu einer "async function"</p>
+          <p class="fragment">
+            Eine <code>async</code> Funktion gibt &nbsp; <b>immer</b> ein Promise zurück
+          </p>
+          <pre class="fragment"><code class="javascript" contenteditable data-trim>
+  async function greet(name) {
+    return `Hello, ${name}`;
+  }
+  
+  const greeting = greet('Klaus');
+  
+  // greeting is a Promise!
+  console.log(greeting instanceof Promise); // => true
+  console.log(greeting) // => Promise {&lt;resolved>: "Hello, Klaus"}
+                  </code></pre>
+          <p class="fragment"><code>async</code> Funktion als Fat Arrow Funktionen:</p>
+          <pre class="fragment"><code class="javascript" contenteditable data-trim>
+  const greet = async (name) => `Hello, ${name}`;                
+    
+  const greeting = greet('Klaus');
+    
+  // greeting is a promise!
+  console.log(greeting instanceof Promise); // => true
+  console.log(greeting) // => Promise {&lt;resolved>: "Hello, Klaus"}
+                    </code></pre>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+### Top-Level await in Node.JS
+* Seit Node 14.8, könnt ihr `await` auch auf Top-Level-Ebene verwenden
+* Ihr braucht dann keine `async`-Funktion mehr
+  * (Falls ihr `await` in einer Funktion nutzt, muss diese weiterhin `async` sein)
+* Achtung! Das geht nur in JavaScript Modulen (ESM)  
+          </textarea>
+        </section>
+
+        <section>
+          <h3>async / await</h3>
+          <p>
+            Anstatt <code>then</code> oder <code>catch</code>-Ketten kannst Du einfach mehrere
+            <code>await</code> Statements verwenden und try/catch für die Fehlerbehandlung:
+          </p>
+          <pre class="fragment"><code class="javascript" contenteditable data-trim>
+  // Return promises
+  async function loadUser(username) { . . . };
+  async function loadProfileDate(userId) { . . .};
+  
+  async function loadData() {
+    try {
+      const user = await loadUser('klaus');
+      const profile = await loadProfileData(user.userId);
+    } catch (e) {
+      console.error("Something failed")
+    }
+  }
+---
+### Übung: Promises API
+- _Arbeite mit der Promise API_
+- Es gibt zwei Übungsdateien:
+  1. `js-intro/10_promises/index.js`
+  2. `js-intro/10_promises/promisify.js`
+- In diesen beiden Dateien findest Du die Aufgaben
+- Du kannst die Dateien jeweils mit `node` ausführen, Ausgaben sollten dann im Terminal auf der Konsole erscheinen
+- Bei Fragen oder Problemen, kannst Du dich jederzeit melden
+- Lösungen findest Du in `10_promises/solution`
+- Wenn Du fertig bist, bitte die Hand in Zoom heben 🙋
+                      </code></pre>
+        </section>
+
+        <section id="t-typescript">
+          <h2>TypeScript</h2>
+          <p class="fragment">
+            <em>TypeScript is a superset of JavaScript that compiles to plain JavaScript </em>(
+            <a href="http://www.typescriptlang.org/" target="_blank"
+              >http://www.typescriptlang.org/</a
+            >)
+          </p>
+          <ul>
+            <li class="fragment">Erweitert JavaScript um ein Typen System</li>
+            <li class="fragment">
+              Jeder gültige JavaScript Code ist auch gültiger TypeScript Code
+            </li>
+            <li class="fragment">
+              Mittels des TypeScript Compilers wird aus TS Code JavaScript Code
+            </li>
+            <li class="fragment">
+              TypeScript-spezifischer Code ist nach dem Compilieren weg, Laufzeitverhalten
+              unterscheidet sich daher nicht von JavaScript
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>TypeScript Grundlagen</h3>
+          <p>Typ-Angaben werden hinter einen Bezeichner geschrieben</p>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// Variablen können Typ-Informationen bekommen
+let foo: string;
+foo = 'yo';
+// Error: number: This type is incompatible with string
+foo = 10;
+         </code></pre>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// Funktionen
+function sayIt(what: string): string {
+return `Saying: ${what}`;
+}
+
+sayIt('Klaus'); // ok
+sayIt(10); // error
+</code></pre>
+
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// Arrow Funktionen
+const sayIt = (what: string): string => `Saying: ${what}`;
+
+sayIt('Moin');
+sayIt(123); // Error: Argument of type '123' is not assignable
+      // to parameter of type 'string'.
+</code></pre>
+        </section>
+
+        <section>
+          <h2>Eingebaute Typen</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// string
+let city: string = 'Hamburg';
+
+// boolean
+let isDone: boolean = false;
+
+// number
+let theAnswer: number = 42;
+
+// array (note the [])
+let cities: string[] = ['Hamburg', 'Barcelona'];
+// alternative:
+let languages: Array&lt;string> = ['JavaScript', 'TypeScript'];
+
+// void
+function log(s: string): void { /* ... */ }
+      </code></pre>
+        </section>
+        <section>
+          <h2>Eingebaute Typen: any und unknown</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// any: kann alle Typen aufnehmen, Typ-Prüfung ist ausgeschaltet
+let theUnknown: any = 'Who cares';
+theUnknown = 666; // ok
+theUnknown = true; // ok
+let a: number = theUnknown; // ok
+
+function loadData(): any { return "" // ok }
+let b:number = loadData(); // ok
+
+      </code></pre>
+        </section>
+        <section>
+          <h2>Eingebaute Typen: any und unknown</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// unknown: kann ebefalls alle Typen aufnehmen, erzwingt aber vor der Verwendung Typ-Prüfung
+function loadData(): unknown { return "" // ok }
+let b = loadData(); 
+b.toUpperCase(); // ERROR
+if (typeof b === "string") {
+// b ist jetzt string (typeof ist Laufzeitprüfung!)
+b.toUpperCase(); // OK
+}
+      </code></pre>
+        </section>
+        <section>
+          <h2>Typen können abgeleitet (inferred) werden</h2>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+let city = 'Hamburg'; // city ist ein String
+
+city = 42;
+// Fehler: [ts] Type '42' is not assignable to type 'string'.
+</code></pre>
+          <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+// Explizite Angabe eines Types (parameter)
+// und abgeleiteter Typ (Return Type der Funktion)
+
+function sayIt(what: string) {
+return `Saying: ${what}`;
+}
+
+const said: string = sayIt('Hello TypeScript'); // ok
+const saidItWrong: number = sayIt('Hello TypeScript'); // error!
+
+
+</code></pre>
+        </section>
+
+        <section>
+          <h2>Type Check ausschalten</h2>
+          <p>
+            Mit <code>@ts-ignore</code> (als Kommentar) kann wird die Überprüfung der nächsten Zeile
+            ausgeschaltet:
+          </p>
+          <pre><code class="typescript line-numbers" contenteditable data-trim>
+let city:string = "Hamburg";
+
+city = 20259; // error: [ts] Type '20259' is not assignable to type 'string'.
+
+// @ts-ignore
+city = 20259; // ok                
+</code></pre>
+          <p class="fragment">
+            Nützlich in corner cases, die nur schwer mit TypeScript abbildbar sind oder bei
+            Migration
+          </p>
+        </section>
+        <section>
+          <h2>null und undefined</h2>
+          <div class="fragment">
+            <p><code>null</code> muss explizit zugelassen werden <em>(strictNullChecks</em>):</p>
+            <pre><code class="typescript line-numbers" contenteditable data-trim>
+let city:string = null; //Type 'null' is not assignable to type 'string'.
+
+let optionalCity:string|null = null; // OK
+      </code></pre>
+          </div>
+          <div class="fragment">
+            <p><code>undefined</code> muss ebenfalls explizit zugelassen werden:</p>
+            <pre><code class="typescript line-numbers" contenteditable data-trim>
+let city:string = undefined; //Type 'undefined' is not assignable to type 'string'.
+
+let optionalCity:string|undefined = undefined; // OK
+let optionalCity:string|undefined|null = null; // OK
+        </code></pre>
+          </div>
+          <div class="fragment">
+            <p>
+              Optionale Parameter können mit ? gekennzeichnet werden (erlauben dann auch
+              <code>undefined</code>)
+            </p>
+            <pre class="fragment"><code class="typescript line-numbers" contenteditable data-trim>
+function greet(name: string, greeting?: string) {
+console.log(`${greeting || 'Hello'}, {name}`);
+}
+
+greet('Susi', 'Moin')// Moin, Susi
+
+// 2. Parameter ist optional:
+greet('Klaus'); // Hello, Klaus
+
+greet('Peter', null); // Argument of type 'null' is not assignable
+                // to parameter of type 'string | undefined'.
+      </code></pre>
+          </div>
+        </section>
+
+        <section>
+          <h2>Eigene Typen</h2>
+          <p>
+            Mit <code>interface</code> und <code>type</code>können eigene Typen (Objekt-Strukturen)
+            definiert werden:
+          </p>
+
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+// Komplexer Typ
+interface Person {
+name: string; // Pflicht
+livesIn?: string; // Optional
+}
+
+// Alternativ: Type Alias (interface und type fast synonym)
+type Person = { name: string; livesIn?: string; }
+
+const susi: Person = { // OK
+name: 'Klaus',
+livesIn: 'Hamburg'
+};
+const klaus: Person = { // OK (livesIn ist optional)
+name: 'Klaus'
+}
+
+const helmut: Person = {} // Error: Property 'name' is missing
+
+const lukas: Person = {
+name: 'Lukas',
+profession: 'Lokführer'
+} // Error: 'profession' does not exist in type 'Person'.
+         </code></pre>
+        </section>
+
+        <section>
+          <h2>Eigene Typen II</h2>
+          <p>Eigene Objekt-Typen können sowohl "Attribute" als auch Funktionen enthalten:</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+    // Komplexer Typ
+    type Person {
+      name: string; // Pflicht
+      greet(greeting: string): string;
+    }
+
+    const p:Person = {
+      name: "Klaus",
+      greet(greeting: string) { 
+        return `${greeting}, ${this.name}`
+      }
+    }
+    p.greet("Hello"); // OK
+    p.greet(123); // ERR: Argument of type '123' is not 
+                  // assignable to parameter of type 'string'.
+
+    const wrong:Person = {
+      name: "Susi", // OK
+      greet(greeting: number) { return "hello" } 
+        // ERR: Type '(greeting: number) => string' is not assignable to 
+        //      type '(greeting: string) => string'.
+        //      Types of parameters 'greeting' and 'greeting' are incompatible.
+        //      Type 'string' is not assignable to type 'number'.
+    }
+                   </code></pre>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+### Interface vs. Type
+
+https://twitter.com/TkDodo/status/1659917377293746178?s=20
+          </textarea>
+        </section>
+        <section>
+          <h2>Union Types</h2>
+          <p>Variablen, Parameter etc. können mehr als einen Typ annehmen:</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+type Person = { name: string };
+type Movie = { title: string };
+
+function printNameOrTitle(obj: Person | Movie) { 
+
+console.log(obj.title); // ERR: Property 'title' does not 
+                  // exist on type 'Person | Movie'
+
+if ("title" in obj) { // Abfrage ist ein "Type Guard"
+// obj ist Movie hier, title ist definiert
+console.log(obj.title);
+} else {
+// obj ist Person hier: name ist definiert
+console.log(obj.name);
+}
+}
+
+printNameOrTitle({name: "Klaus"}); //OK
+printNameOrTitle({title: "Pulp Fiction"}); //OK
+printNameOrTitle({label: "Save"}); // ERR
+
+  </code></pre>
+        </section>
+        <section>
+          <h2>Type Guards</h2>
+          <p>Durch einen Type Guard können Typen "eingeengt" werden</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+type Person = { name: string };
+type Movie = { title: string };
+
+// Wenn diese Funktion true zurueckgibt, nimmt Typescript an,
+// dass das übergebene Argument vom Typ Movie ist
+function isMovie(candidate: any): candidate is Movie {
+return ("title" in candidate);
+}
+
+function printNameOrTitle(obj: Person | Movie) { 
+if (isMovie(obj)) {
+// movie
+}
+}
+
+  </code></pre>
+        </section>
+        <section>
+          <h2>Type Assertions</h2>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+type Person = { name: string };
+type Movie = { title: string };
+
+// Wenn diese Funktion zurueckkehrt (kein Error geworfen wird) nimmt Typescript an,
+// dass das übergebene Argument vom Typ Movie  ist
+function assertIsMovie(candidate: any): asserts candidate is  Movie {
+if ("title" in candidate) {
+return;
+}
+throw new Error("Candidate is not a movie!")
+}
+
+function printTitle(hopefullyAMovie: any) { 
+assertPersonIsMovie(hopefullyAMovie)
+// hopefullyAMovie ist jetzt Movie
+hopefullyAMovie.title; // OK
+}
+
+  </code></pre>
+        </section>
+        <section>
+          <h2>String Literal Types</h2>
+          <p>Beispiel: String Aufzählungstyp</p>
+          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
+// Beispiel:             
+type View = "POST_LIST" | "POST_EDITOR";
+
+const s:View = "POST_LIST"; // OK
+const t:View = "POST_LISTE" // FEHLER
+
+function setView(v: VIEW) {
+if (v === "POST_LIST") { ... } // ok
+if (v === "POST_LISTE") { ... } // error: immer false
+}
+
+setView("POST_LIST"); //OK
+setView("POST_LISTE"); // ERROR
+  </code></pre>
         </section>
 
         <section>
