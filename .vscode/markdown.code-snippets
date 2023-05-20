@@ -78,8 +78,14 @@
   "Markdown hidden": {
     "scope": "html",
     "prefix": "mdh",
-    "body": ["<!-- .slide: data-visibility=\"hidden\" -->$0"]
+    "body": ["<!-- .slide: data-visibility=\"hidden\" -->  $0"]
   },
+  "Markdown Slide Id": {
+    "scope": "html",
+    "prefix": "mdi",
+    "body": ["<!-- .slide: id=\"$1\" -->", "$0"]
+  },
+
   "Markdown slide left": {
     "scope": "html",
     "prefix": "mdl",

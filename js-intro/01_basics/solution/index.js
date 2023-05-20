@@ -1,6 +1,10 @@
 console.log("Please edit index.js");
 
 function helloWorld(name) {
+  if (name === undefined) {
+    throw new Error("Please specify name");
+  }
+
   if (typeof name === "function") {
     name = name();
   }
@@ -12,7 +16,11 @@ function helloWorld(name) {
   return `Hallo, ${name}`;
 }
 
-console.log(1, helloWorld()); // ""
+try {
+  console.log(1, helloWorld()); // <-- darf nicht ausgegeben werden
+} catch (err) {
+  console.log("1 ERROR: ", err.message);
+}
 console.log(2, helloWorld(null)); // ""
 console.log(3, helloWorld("Susi")); // "Hallo, Susi"
 console.log(4, helloWorld("")); // "Hallo, "

@@ -132,10 +132,10 @@
 ### Agenda
 * [JavaScript Sprachgrundlagen](#/t-javascript)  
   * Typen
+  * [Funktionen](#/t-funktionen)
   * Objekte und Arrays
-  * Funktionen
-  * Klassen und Closures
-  * Module
+  * [Klassen und Closures](#/t-klassen)
+  * [Module](#/t-module)
 * [Asynchrone Programmierung mit Promises](#/t-promises)  
 * [TypeScript](#/t-typescript)
   * Grundlagen
@@ -381,11 +381,111 @@ thanks for subscribing to our e-mail newsletter.
 Yours, Edgar`;       
           </code></pre>
         </section>
+        <section data-markdown>
+          <textarea data-template>
+### Fehlerbehandlung
+
+* In *synchronem* Code (oder mit async/await): `try`/`catch`/`finally`
+* Fast wie aus Java gewohnt
+* ```typescript
+  try {
+    sayHello("Moin", "Klaus")
+  } catch (err) {
+    console.error("Error", err)
+  } finally {
+    // ...
+  }
+  ```
+* Mit `throw` könnt ihr jeden beliebigen Wert "werfen"
+  * Das ist anders als in Java, wo wie nur `Throwable`s werfen können
+  * In der Regel werden Instanzen von `Error` geworfen
+  * ```typescript
+    throw new Error("Invalid argument!");
+    ```
+* Es gibt keinen Unterschied zwischen "Checked Exceptions" und "Unchecked Exceptions"    
+  * `throws` gibt es in JavaScript nicht
+---
+### Fehler auffgangen
+* Mit `catch` könnt ihr Fehler fangen (wie in Java)    
+* Ihr könnt _nicht_ einschränken, welche Fehler(-Typen) ihr fangen wollt (anders als in Java)
+* Ihr müsst also im Zweifel überprüfen, was ihr für einen Fehler habt
+* (In TypeScript ist der Typ von `err` deswegen `unknown`)
+  * ```typescript
+    try {
+      // ...
+    }
+    catch (err) {
+
+      if (err instanceof Error) {
+        // ...
+      } else if (typeof err === "string") {
+        // ...
+      }
+
+    }
+    ```
+---
+### Eigene Fehler werfen
+* Ihr könnt jeden beliebigen Wert werfen
+* ```typescript
+  throw "Invalid filename"
+  throw { message: "Invalid filename", code: 123 };
+  ```
+* Der Konstruktor von `Error` nimmt einen optionalen Parameter mit einer Messag entgegen
+* ```typescript
+  throw new Error();
+  throw new Error("Invalid filename");
+  ```
+* `name` und `message` von `Error` könnt ihr dann abfragen:
+* ```typescript
+  catch (err) {
+    console.error(err.name); // "Error"
+    console.error(err.message); // "Invalid filename"
+  }
+  ```
+* Es gibt eine Reihe von [eingebauten Error-Typen](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors?retiredLocale=de)
+* Ihr könnt aber auch einige Spezialisierugen bauen, dazu von `Error` ableiten:
+* ```typescript
+  class InvalidFilenameError {
+    constructor(filename) {
+      super(`Invalid filename: ${filename}`);
+      this.name = "InvalidFilenameError";
+    }
+  }
+  ```
+---
+### Error causes
+
+* Wenn ihr einen Error "weiterwerfen" wollt, könnt ihr das `cause`-Property setzen
+* Dazu müsst ihr den zweiten Parameter im `Error`-Konstruktor verwenden
+* ```typescript
+  try {
+    // ...
+  } catch (err) {
+    throw new Error("Could not read file", { cause: err} );
+  }
+  ```
+* Auch `cause` kann jeder beliebige Typ sein
+ * Ihr müsst kein `Error`-Objekt übergeben
+ * Ihr könnt die `cause` für Detail-Informationen bei jedem Error verwenden
+ * ```typescript
+   if (fileSize > 123) {
+    throw new Error("File too large", { 
+      cause: { code: 1, fileSize: fileSize }
+    })
+   }
+   ```
+
+  </textarea
+          >
+        </section>
 
         <!-- ============================================================================= -->
         <section data-markdown>
           <textarea data-template>
-<!-- .slide: class="left" -->            
+<!-- .slide: class="left" -->
+<!-- .slide: id="t-funktionen" -->
+            
 ### Funktionen
 * ```typescript
   function greet(msg) {
@@ -1197,6 +1297,7 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
 
         <section data-markdown>
           <textarea data-template>
+<!-- .slide: id="t-klassen" -->
 ### Klassen
 
 * Klassen können in JavaScript mit `class` erzeugt werden
@@ -1580,7 +1681,7 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
           >
         </section>
         <!-- ============================================================================= -->
-        <section>
+        <section id="t-module">
           <h3>Module</h3>
           <p>Module bestimmen explizit, was außerhalb verwendet werden darf</p>
           <p>Module geben explizit an, was sie aus anderen Modulen verwenden wollen</p>
@@ -1606,6 +1707,15 @@ den _rechten_ Ausdruck nur zurück, wenn der linke Ausdruck `null` oder `undefin
   * Das macht einen Mischbetrieb für die Laufzeitumgebung komplex
 * CommonJS Module funktionieren nicht im Browser 
 * CommonJS flexibler, `require` kann überall verwendet werden, `import` nur am Beginn einer Datei
+---
+### Module im Browser
+* Browser unterstützen nur das JavaScript Modulsystem
+  * Und das proprietäre AMD 
+* Um auch Node.JS Module nutzen zu können, verwenden die meisten JS Frontend Tools sog. "Bundler"
+* Ein Bundler analysiert Eure JavaScript-Dateien und kann die verwendeten Modulsysteme "entfernen"  
+* Dazu wird der Code durch Code ersetzt, der im Browser ausführbar ist
+  * Bekannte Bundler: [Webpack](https://webpack.js.org/) und [Rollup](https://rollupjs.org/)
+  * [esbuild](https://esbuild.github.io/) und [TurboPack](https://turbo.build/pack) sind noch recht neu, versprechen aber bessere Performance
 ---
 ### Das JavaScript Modulsystem
 * Das JavaScript Modulsystem könnt ihr verwenden, wenn ihr:
@@ -2327,6 +2437,29 @@ profession: 'Lokführer'
         <section data-markdown>
           <textarea data-template>
 ### Interface vs. Type
+
+* Zum Beschreiben von Objekten könnt könnt ihr `Interface` und `Type` verwenden
+* Die beiden Konstrukte sind sich sehr ähnlich
+* In vielen Fällen macht es keinen Unterschied, abgesehen von minimal unterschiedlicher Syntax
+* Die beiden Typen können sich auch gegenseitig erweitern
+* ```typescript
+  interface Person { name: string }
+  type Employee = Person & { sallary: number }
+  interface Manager extends Employee { bonus: number }
+  ```
+* Klassen können sowohl Types als auch Interfaces implementieren:
+* ```typescript
+  type Greeter = { sayHello(): string }
+  interface Translator { translate(s: string): string }
+
+  class Messenger implements Greeter, Translator {
+    sayHello() { return "... "}
+    translate(s: string) { return "..."}
+  }
+  ```
+  
+
+
 
 https://twitter.com/TkDodo/status/1659917377293746178?s=20
           </textarea>
