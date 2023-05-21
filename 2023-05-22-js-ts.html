@@ -139,7 +139,9 @@
 * [Asynchrone Programmierung mit Promises](#/t-promises)  
 * [TypeScript](#/t-typescript)
   * Grundlagen
-  * ...
+  * Union und Intersection Types
+  * Generics
+  * Decorators
 * In den ersten Teilen beschäftigen wir uns "nur" mit JavaScript, ohne TypeScript
   * Syntax, Konzepte und Verhalten bleiben mit TypeScript identisch
   
@@ -2410,7 +2412,7 @@ greet('Peter', null); // Argument of type 'null' is not assignable
           <h2>Eigene Typen</h2>
           <p>
             Mit <code>interface</code> und <code>type</code>können eigene Typen (Objekt-Strukturen)
-            definiert werden:
+            beschrieben werden:
           </p>
 
           <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
@@ -2472,6 +2474,64 @@ profession: 'Lokführer'
         </section>
         <section data-markdown>
           <textarea data-template>
+### Intersection Types
+
+* Intersection Types sind vorsichtig mit Vererbung in OO vergleichbar
+* Ein Intersection Type enthält _alle_ Eigenschaften die in einem (oder mehreren Typen) vorhanden sind
+* ```typescript
+  const Person = { firstname: string }
+  const Employee = Person & { company : string }
+
+  const e: Employee = { firstname: "Klaus", company: "IT AG" }
+  ```
+---
+### Intersection Types
+* Der erzeugte Typen sind die Schnittmenge der angegebene Typen 
+* ```typescript
+  type A = { a: string }
+  type B = { a: string | null }
+  type C = A & B
+
+  const c:C = {
+    a: ""
+  }
+
+  const c2: C = {
+    a: null // ERR: a ist string!
+  }
+  ```
+
+* Das heißt auch, der Intersection Type kann jeweils seinen Typen zugewiesen werden.
+* ```typescript
+
+  declare function useA(a: A);
+  declare function useB(b: B);
+
+  useA(c);
+  useB(c);
+  ```
+* Umgekehrt gilt das aber nicht:
+* ```typescript
+  declare function getB(): B;
+  const result: C = getB(); 
+  //      Types of property 'a' are incompatible.
+  //        Type 'string | null' is not assignable to type 'string'.
+  //          Type 'null' is not assignable to type 'string'
+  ```
+---
+### Intersection Types  
+* Wenn die Typen inkompatibel sind, ist das Ergebnis `never`:
+* ```typescript
+  type A = { a: string }
+  type B = { a: boolean }
+  type C = A & B
+
+  const c:C = {
+    a: "" // ERR: a ist never! 
+  }
+  ```
+
+---
 ### Interface vs. Type
 
 * Zum Beschreiben von Objekten könnt könnt ihr `Interface` und `Type` verwenden
@@ -2536,6 +2596,33 @@ profession: 'Lokführer'
   
           </textarea>
         </section>
+        <section data-markdown>
+          <textarea data-template>
+### Type Casts
+
+* Genau wie in Java können Typen "gecastet" werden
+* ```typescript
+  declare function readObjectFromDatabase(): object;
+
+  type Person = { firstname: string };
+
+  const p: Person = readObjectFromDatabase() as Person;
+  ```
+* Wenn die Typen (für TypeScript) nicht kompatibel sind, müssen zwei Casts durchgeführt werden
+(ebenfalls ähnlich wie in Java)
+* ```typescript
+  const person = {
+    firstname: "Klaus"
+  }
+
+  const s:string = person; // ERR Type '{ firstname: string; }' is not assignable to type 'string'
+  const a:string = person as string; // ERR Conversion of type '{ firstname: string; }' to type 'string' may be a mistake because neither type sufficiently overlaps with the other.
+  const b:string = person as unknown as string; // OK ... 
+  ```
+
+  </textarea
+          >
+        </section>
         <section>
           <h2>Union Types</h2>
           <p>Variablen, Parameter etc. können mehr als einen Typ annehmen:</p>
@@ -2586,9 +2673,69 @@ function printNameOrTitle(obj: Person | Movie) {
         </section>
         <section data-markdown>
           <textarea data-template>
-### Type Guards
-* `typeof`
-* Mit `in` prü
+### Narrowing
+* Mit einem Type Guard kannst Du Typen "einschränken"
+  * Das Konzept nennt sich [Type Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+* Es gibt verschiedene (JavaScript) Laufzeit-Prüfungen, aus denen TypeScript zur Build-Zeit Rückschlüsse auf das Typ-System zieht:
+* Du kannst den `typeof`-Operator von JavaScript verwenden:
+* ```typescript
+  function sayHello(a: string | Function) {
+    if (typeof a === "function") {
+      // a ist hier Function
+      return `Hello, ${a()}`
+    }
+
+    // a ist hier String
+    return `Hello, ${a.toUppercase()}`
+  }
+  ```
+
+* Mit `in` prüfen, ob eine Eigenschaft in einem Objekt vorhanden ist
+* ```typescript
+  type Person = { firstname: string, lastname: string, address: { street: string } }
+  type Company = { name: string, address: { street: string } }
+
+  function greet(a: Person | Company) {
+    console.log(`You're at ${a.address.street}`); 
+      // OK address.street in Person und Company vorhanden
+
+    if ("firstname" in a) {
+      console.log(`Hello ${a.firstname} ${a.lastname}`); 
+    } else {
+      console.log(`Company name ${a.name}`);
+    }
+  }
+  ```
+---
+### Narrowing 2  
+* Mit `instanceof` kannst Du prüfen, um welche Instanz einer Klasse es sich handelt  
+* ```typescript
+  class Person {}
+  class Company {}
+  function greet(p: Person | Company) {
+    if (p instanceof Person) {
+      // p ist Person hier
+    } else {
+      // p ist Company hier
+    }
+  }
+  ```
+* An Hand von konkreten Werten
+* ```typescript
+  type SuccessMessage = { success: true, msg: string };
+  type ErrorMessage = { success: false, error: string };
+
+  function handleMessage(m: SuccessMessage | ErrorMessage) {
+    // 'success' in beiden Typen vorhanden, unterscheiden sich aber durch Ausprägung
+    if (m.success === true) {
+      // SuccessMessage
+      return m.msg; // OK
+    }
+    return "Error: " + m.error; // OK
+  }
+  ```
+
+
   </textarea
           >
         </section>
@@ -2600,41 +2747,274 @@ type Movie = { title: string };
 
 // Wenn diese Funktion zurueckkehrt (kein Error geworfen wird) nimmt Typescript an,
 // dass das übergebene Argument vom Typ Movie  ist
-function assertIsMovie(candidate: any): asserts candidate is  Movie {
-if ("title" in candidate) {
-return;
-}
-throw new Error("Candidate is not a movie!")
+function assertIsMovie(candidate: any): asserts candidate is Movie {
+  if ("title" in candidate) {
+    return;
+  }
+  throw new Error("Candidate is not a movie!")
 }
 
 function printTitle(hopefullyAMovie: any) { 
-assertPersonIsMovie(hopefullyAMovie)
-// hopefullyAMovie ist jetzt Movie
-hopefullyAMovie.title; // OK
+  assertPersonIsMovie(hopefullyAMovie)
+  // hopefullyAMovie ist jetzt Movie
+  hopefullyAMovie.title; // OK
 }
 
   </code></pre>
         </section>
-        <section>
-          <h2>String Literal Types</h2>
-          <p>Beispiel: String Aufzählungstyp</p>
-          <pre><code data-trim contenteditable class="line-numbers typescript" data-leftpad>
-// Beispiel:             
-type View = "POST_LIST" | "POST_EDITOR";
 
-const s:View = "POST_LIST"; // OK
-const t:View = "POST_LISTE" // FEHLER
+        <section data-markdown>
+          <textarea data-template>
+### Literal Types
+* Mit einem [Literal Type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types) kannst Du einen Typen definieren, der einen konkreten String darstellt 
+* ```typescript
+  // Beispiel:             
+  type Answer = "Yes" | "No" | "I_dont_care";
 
-function setView(v: VIEW) {
-if (v === "POST_LIST") { ... } // ok
-if (v === "POST_LISTE") { ... } // error: immer false
-}
+  const a1:Answer = "Yes"; // OK
+  const a2:View = "Maybe" // FEHLER
+  ```
+* ```typescript
+  function fillIn(a: Answer) {
+    if (a === "Yes") { ... } // ok
+    if (a === "Maybe") { ... } // error: immer false
+  }
 
-setView("POST_LIST"); //OK
-setView("POST_LISTE"); // ERROR
-  </code></pre>
+  fillIn("I_dont_care"); //OK
+  fillIn("Maybe"); // ERROR
+  ```
+* Das funktioniert auch für number 
+* ```typescript
+  type OneOrZero = 1 | 0;
+  declare function toggleBit(v: OneOrZero): void;
+  toggleBit(1); // OK
+  toggleBit(2); // ERR
+  ```  
+
+---
+### Der typeof-Operator
+
+* Der `typeof`-Operator in JavaScript liefert den _Wert_ einer Variablen zur Laufzeit zurück.
+* Mit dem [`typeof`-Operator von TypeScript](https://www.typescriptlang.org/docs/handbook/2/typeof-types.html#handbook-content) kann der Typ eines Werts auf Typ-Ebene ermittelt werden.
+  * Im Grunde das, was die IDE tut, wenn ihr mit der Maus über einen Variable fahrt
+* ```typescript
+  const languages = {
+    de: "DE",
+    en: "EN"
+  }
+
+  type TLanguages = typeof languages;          // TLanguages ist TYPE, languages ist WERT
+        // { de: string; en: string; }
+
+  export declare function translateMessage(msg: string, lang: keyof TLanguages): string;
+
+  // oder:
+  type TLanguageKeys = keyof typeof languages;
+  export declare function translateMessage(msg: string, lang: TLanguageKeys): string;
+  ```
+* Das geht für alle möglichen Dinge, auch für Funktionen:
+* ```typescript
+  declare function sayHello(name: string): string | null;
+
+  type Fn = typeof sayHello;
+        // (name: string) => string | null
+  ```
+---
+### Übung: TypeScript
+* Mach dich mit `typeof`, Union Types und Type Guards vertraut
+* Vorbereitung:
+  * Bitte in `js-intro/ts` einmal `npm install` ausführen
+* In der Datei `js-intro/ts/10_intro.ts` findest Du eine Übung beschrieben
+* Du musst die Datei nicht ausführen. Sie soll "nur" keine TypeScript-Fehler haben
+* Die erwarteten Fehler (bzw. nicht-Fehler) habe ich Euch in die Datei geschrieben.
+* Eine mögliche Lösung findest Du in `10_s_intro.ts` ("s" wie Solution 😊)
+* Wenn Du fertig bist, bitte Hand heben in Zoom 🙋
+
+---
+## Generics
+<!-- .slide: id="t-generics" -->
+
+---
+### Generics
+* **Beispiel**: eine (JavaScript-)Funktion, die einen beliebigen Wert validiert. Wenn der Wert gültig ist,
+wird er von der Funktion unverändert zurückgegeben, ansonsten wirft die Funktion einen `Error` und kehrt nicht zurück.
+* Mit `any` können wir Funktionen beschreiben, die alle möglichen Typen entgegennehmen
+  und/oder zurückliefern
+  * ```typescript
+    declare function validate(obj: any): any
+    ```
+* Was machen wir aber, wenn wir den übergebenen Typen (für `obj`) an anderer Stelle benötigen?
+  * Zum Beispiel, um sicherzustellen, dass der Rückgabe-Typ dem Typen eines Parameters entspricht?
+* ```typescript
+  const p = validate("hallo"); // p soll string sein (ist: any 😔)
+  const n = validate(123); // n soll number sein (ist: any 😔)
+  ```
+  
+---
+### Generics
+* Für Funktionen, Klassen und Typen können **Typ Variablen** definiert werden
+* Fast wie Funktionsparameter, nur dass keine __Werte__, sondern __Typen__ angegeben werden
+* Die Typ Variable wird deklariert (`<VariablenName>`) und kann dann in der gesamten Funktionssignatur bzw. Typ-Definition verwendet werden
+* Vorheriges Beispiel, jetzt mit Generics und gewünschtem Verhalten:
+  * ```typescript
+    // "O" ist Typ Variable
+
+    declare function validate<O>(o: O): O
+    const p = validate("hallo"); // p jetzt string 😊
+    const n = validate(123); // n jetzt number 😊
+    ```
+---
+### Generics: Weitere Beispiele    
+* Fachliche Idee: Die **Funktion** liefert den übergebenen Wert zurück
+  oder "null", falls der Wert ungültig ist (was auch immer "ungültig" hier bedeutet)  
+* ```typescript
+    declare function validate<O>(o: O): O | null
+  ```
+* Ein **Type Alias**, der entweder eine Liste von Dingen ist oder `null`
+  * (fachlich bescheuertes Beispiel, bessere Beispiele folgen...)
+* ```typescript
+    type ListOrNull<O> = Array<O> | null;
+  ```
+* Eine **Klasse**, die eine Liste von Dingen enthält:
+* ```typescript
+  class OrderedList<O> {
+    addItems(o: Array<O>) {
+      // ...
+    }
+  }
+  ```
+    
+---
+### Generics
+* Beim Verwenden wird der __Typ__ entweder vom übergebenen __Wert__ abgeleitet:
+* ```typescript
+  declare function validate<O>(o: O): O | null
+  const x = validate("Hallo"); // O ist string, x ist string | null
+  const y = validate(7); // O ist number, y ist number | null
+  ```
+* ...oder der Typ wird explizit angegeben. Dann muss der __Wert__ dem angegebenen __Typen__ entsprechen:
+* ```typescript
+  validate<string>("Hallo"); // O ist string, Argument ist string: Alles OK!
+  validate<string>(7); // O ist string, Argument ist number:
+                       // ERR: Argument of type 'number' is not assignable to parameter of type 'string'
+  ```
+* Dasselbe gilt für Klassen:
+* ```typescript
+  class OrderedList<O> {
+    constructor(initialItems: Array<O>) {
+      // ...
+    }
+  }
+
+  new OrderedList<string>([ "A" ]); // OK 
+  new OrderedList([ "A" ]); // OK
+  new OrderedList<string>([ 1 ]); // ERR Type 'number' is not assignable to type 'string'.
+  ```
+  
+---
+### Generics: Default-Werte
+* Analog zu "normalen" Funktionsargumenten, können auch bei Generics Default**typen** angegeben werden
+* Wie bei Funktionsargumenten kann auch nur der letzte bzw. die letzten Argumente Default-Typen haben
+* ```typescript
+  declare function validate<O, R = string>(o: O): O | R
+
+  validate(7); // RückgabeTyp: number | string 
+  validate<number>(7); // RückgabeTyp: number | string 
+  validate<number, null>(7); // RückgabeTyp: number | null
+  validate<number, boolean>(7); // RückgabeTyp: number | boolean
+  ```
+* ```typescript
+  type Tuple<X, Y = string> = [X, Y];
+
+  type TupleOfNumberAndStrings = Tuple<number>; // [number, string]
+  type TupleOfStringAndBoolean = Tuple<string, boolean>; // [string, boolean]
+  ```
+* Wie bei Funktionsargumenten, können auch Typ Variablen an andere Typen weitergegeben werden:
+* ```typescript
+  type ReactUseStateTuple<V> = Tuple<V, (newValue: V) => void>;
+         // [ V, function(a: V): void ]
+  ```
+
+---
+### Generic: Constraints   
+* Wie bei "normalen" Argumente, können die Typ-Argumente Einschränkungen haben:
+* Die Einschränkungen werden mit `extends` definiert
+  * Der übergenene Typ muss dann derselbe oder ein davon erweiterter sein:
+* Beispiel: beliebiges Objekt erlaubt  
+* ```typescript
+  declare function validateObject<O extends object>(o: O): O | null;
+
+  validateObject({name: "Klaus"}); // OK
+  validateObject("Klaus");         // ERR: Argument of type 'string' is not 
+                                   // assignable to parameter of type 'object'
+
+  ```
+* Beispiel: nur Objekte mit bestimmter Struktur erlaubt  
+* ```typescript
+  type Person = { firstname: string | null };
+
+  declare function getOrDefault<P extends Person>(p: P): P;
+
+  getOrDefault( { } ); // ERR: Property 'firstname' is missing in type '{}' 
+                       // but required in type 'Person'
+  ```
+---
+### keyof
+* [`keyof`](https://www.typescriptlang.org/docs/handbook/2/keyof-types.html) liefert einen Union Typen zurück, der alle Keys eines Objektes enthält
+* ```typescript
+  type Person = {
+    firstname: string;
+    lastname: string;
+  }
+  type PersonKeys = keyof Person; // "firstname" | "lastname"
+
+  ```
+* Damit kann man zum Beispiel erzwingen, das ein Funktionsparameter nur gültige
+  Keys eines Objekts aufnehmen kann:
+* ```typescript
+  declare function logPropertyOfPerson(propName: keyof Person): void;
+
+  logPropertyOfPerson("firstname"); // OK
+  logPropertyOfPerson("age") // ERR: Argument of type '"age"' is not 
+                              // assignable to parameter of type 'keyof Person'
+
+  ```  
+---
+### Generics mit Union Typen  
+
+* Wenn man einen Union Type als Constraint angibt, muss der übergebene Typ einem
+  der im Union-Typen enthaltenen Typen entsprechen:  
+* ```typescript
+  type Color = "red" | "blue" | "green";
+
+  declare function bgColor<C extends Color> (c: Color): { backgroundColor: C };
+
+  bgColor("red"); // OK
+  bgColor("white"); // Argument of type '"white"' is not 
+                    // assignable to parameter of type 'Color'
+  ```
+* ```typescript
+  type ListOfStringsOrBooleans<X extends string|boolean> = Array<X>;
+
+  const c1: ListOfStringsOrBooleans<string> = ["a"]; // Ok
+  const c2: ListOfStringsOrBooleans<boolean> = [true]; // Ok
+  const c3: ListOfStringsOrBooleans<string|boolean> = [true, "jo!"]; // Ok
+
+  const c4: ListOfStringsOrBooleans<number> = [4]; // ERR Type 'number' does not satisfy 
+                                                   // the constraint 'string | boolean'
+
+  declare function validateNumberOrString<O extends string|number>(o: O): O | null    
+  ```
+
+---
+### Übung Generics
+* Beschreibe eine generische Wrapper-Klasse, die ein Objekt verwaltet
+* Aufgabenbeschreibung findest Du in `29_uebung_generics.ts`.
+* Die Lösung findest Du in `29_s_uebung_generics.ts` (`s` wie `solution
+* Wenn Du fertig bist, bitte Hand heben in Zoom 🙋
+  </textarea
+          >
         </section>
-
         <section data-markdown>
           <textarea data-template>
 ### Decorators
