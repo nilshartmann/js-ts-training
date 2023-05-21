@@ -1,0 +1,20 @@
+{
+  "name": "decorator-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "xstart": "ts-node --esm src/index.ts",
+    "prod": "node dist/index.js",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "*",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}

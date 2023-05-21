@@ -952,6 +952,42 @@ sayHelloToSusi(); // Hello, undefined 🤪
     person.sayHello(); // Klaus
     person.sayHello.call({firstname: "Susi"}); // Susi
     ```
+---
+### `this` in TypeScript
+* In einer Funktion weiß TypeScript nicht, was `this` ist
+  * Geht es uns nicht so ähnlich? 😉
+* Aus diesem Grund kann man den [this-Parameter](https://www.typescriptlang.org/docs/handbook/2/classes.html#this-parameters) verwenden
+* Wenn der erste Parameter in einer Funktion `this` heißt, kann man darüber den Type von `this` festlegen
+* Dieser Parameter wird beim Compilieren entfernt:
+* ```typescript
+  type Person = { firstname: string };
+
+  const person = { firstname: "Klaus" };
+
+  const employee = {
+    sayHello(this: Person) {
+      return this.firstname;
+    }
+  };
+
+  employee.sayHello(); // The 'this' context of type '...' 
+                      // is not assignable to method's 'this' of type 'Person'.
+
+  const sayHello = employee.sayHello.bind(person);
+
+  console.log(sayHello());  // OK
+
+  ```
+
+* Im compilierten JavaScript-Code sieht `employee` so aus:
+* ```typescript
+  const employee = {
+    // kein 'this'-Parameter
+    sayHello() {
+      return this.firstname;
+    }
+  };
+  ```
 
 ---
 ### Objekte und Pfeilfunktionen
@@ -2457,11 +2493,47 @@ profession: 'Lokführer'
     translate(s: string) { return "..."}
   }
   ```
+---
+### Types und Interfaces: Unterschiede
+* Mit `Type` definiert ihr einen Alias. Das geht nicht nur für Objekte
+* ```typescript
+  type OptionalString = string | null | undefined
+  ```
+* Mit `interface` könnt ihr nur Objekte beschreiben
+* Die Deklarationen von zwei Interfaces mit demselben Namen werden zusammengeführt:
+* ```typescript
+  interface Person { name: string };
+  interface Person { sallary: number };
+
+  const person: Person = {
+    name: "Klaus", sallary: 60000
+  }
+  ```
+---
+### "Duck Typing"  
+
+* Für TypeScript sind zwei Typen identisch, wenn sie gleich aussehen
+* ```typescript
+  type Person = { name: string }
+  function sayHello(p: Person) {
+    // ...
+  }
+
+  sayHello({name: "Klaus"}); // OK, weil übergebenes Objekt
+                             // "aussieht" wie Person
+  ```
+* Namen von Typen spielen (anders als in Java) keine Rolle:
+* ```typescript
+  type Person = { name: string };
+  interface Animal { name: string, size?: number };
+
+  const p: Person = { name: "Klaus" };
+  const a: Animal = p; // OK: Animal ist kompatibel zu Person
+                       // (size ist optional in Animal)
+
+  ```
+
   
-
-
-
-https://twitter.com/TkDodo/status/1659917377293746178?s=20
           </textarea>
         </section>
         <section>
@@ -2501,16 +2573,24 @@ type Movie = { title: string };
 // Wenn diese Funktion true zurueckgibt, nimmt Typescript an,
 // dass das übergebene Argument vom Typ Movie ist
 function isMovie(candidate: any): candidate is Movie {
-return ("title" in candidate);
+  return ("title" in candidate);
 }
 
 function printNameOrTitle(obj: Person | Movie) { 
-if (isMovie(obj)) {
-// movie
-}
+  if (isMovie(obj)) {
+    // movie
+  }
 }
 
   </code></pre>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+### Type Guards
+* `typeof`
+* Mit `in` prü
+  </textarea
+          >
         </section>
         <section>
           <h2>Type Assertions</h2>
@@ -2553,6 +2633,261 @@ if (v === "POST_LISTE") { ... } // error: immer false
 setView("POST_LIST"); //OK
 setView("POST_LISTE"); // ERROR
   </code></pre>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+### Decorators
+
+* Ein "Dekorator" "dekoriert" ein bestehendes Objekt, eine Funktion oder eine Klasse und fügt neue Funktionalität hinzu
+  * Typisches Pattern in vielen Programmiersprachen, kennen wir auch aus Java
+  * Oftmals werden Dekoratoren für Querschnittsaufgaben verwendet (Logging/Monitoring/Tracing, Fehlerbehanlding, Transaktionen, Sicherheit)
+* In JavaScript bzw. TypeScript gibt es mehrere Ansätze dafür:
+  * "Normales" JavaScript verwenden
+  * ```typescript
+    function makeLoggingFunction(fn) {
+      return (...args) => {
+        try {
+          console.log(`Function ${fn.name} with args ${args} invoked.`);
+          return fn(...args);
+        } finally {
+          console.log(`Function ${fn.name} returned.`);
+        }
+      };
+    };
+    ```
+  * ```typescript
+    function sayHello(name) { console.log(`Hello, ${name}`) }
+
+    const loggingSayHello = makeLoggingFunction(sayHello);
+    loggingSayHello("Klaus");
+
+    // Function sayHello with args ["Klaus"] invoked.
+    // Hello, Klaus
+    // Function sayHello returned.
+    ```
+---
+### Decorators
+* Es gibt ein [Proposal für Decorators](https://github.com/tc39/proposal-decorators) in JavaScript
+* Das ist nicht final, ab Stage 3, d.h. es wird ziemlich sicher so umgesetzt
+* TypeScript bietet jetzt schon (seit Version 5) Unterstützung dafür
+  * Warnung 1: API und Verhalten kann sich prinzipiell noch ändern
+  * Warnung 2: Das Proposal existiert seit fünf (!) Jahren und wurde zuletzt immer wieder geändert
+    * TypeScript bietet auch Support für das "alte" Decorator Proposal [("Experimental Legacy Decorators")](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#differences-with-experimental-legacy-decorators)
+    * Das muss explizit eingeschaltet werden
+    * Ohne Flag `--experimentalDecorators` verwendet TypeScript den "neuen" Standard, mit dem Flag den alten
+* Im folgenden gucken wir uns das aktuelle Proposal an
+---
+### JS Decorators
+* Im aktuellen Proposal können damit JavaScript Klassen und ihre Member dekoriert werden
+* Ein Dekorator ist eine beliebige Funktion mit der Signatur `(value, context)`
+* Je nachdem, wo der Dekorator angewendet wird, wird der `value` gesetzt (z.B. eine Klasse, eine Funktion oder der Wert eines Felds)
+* Der `context` gibt Auskunft darüber, wo und wie der Dekorator angewandt wurde
+  * `name`: Name des Members
+  * `kind`: Typ des Members (`class`, `field`, `method`, `getter`, `setter`)
+  * Andere Informationen am `context` sind abhängig vom Typ des Members
+* ```typescript
+    function dump(value: any, context: DecoratorContext) {
+      console.log([typeof value, context.kind, context.name]);
+    }
+    @dump
+    class Person {
+      @dump
+      name = "Klaus"
+
+      @dump
+      sayHello() {
+        return "..."
+      }
+    }
+  ```
+* ```typescript
+  const p = new Person();
+    // function, method, sayHello
+    // undefined, field, name
+    // function, class, Person
+  ```
+---
+### Decorators: Parameter
+* Die Typen der beiden Parameter und des Rückgabewertes sind abhängig, von der Stelle, an der der Dekorator verwendet wird
+* Der `value`-Parameter enthält den Wert des Members, der dekoriert wurde
+* Welche TypeScript-Typen ihr für `context` und `value` verwendet, hängt auch von der geplanten Verwendung des Dekorators ab
+  * Oft pragmatisch, `any` zu verwenden
+* Für `context` gibt es TS Typen, die in `lib.decorators.d.ts` definiert sind (noch nicht in der Dokumentation)
+* ```typescript
+  /**
+  * The decorator context types provided to class element decorators.
+  */
+  type ClassMemberDecoratorContext =
+    | ClassMethodDecoratorContext
+    | ClassGetterDecoratorContext
+    | ClassSetterDecoratorContext
+    | ClassFieldDecoratorContext
+    | ClassAccessorDecoratorContext
+    ;
+
+  /**
+  * The decorator context types provided to any decorator.
+  */
+  type DecoratorContext =
+    | ClassDecoratorContext
+    | ClassMemberDecoratorContext
+    ;
+  ```
+
+  * Wollt ihr z.B. sicherstellen, dass ein Dekorator nur für Felder verwendet werden kann, verwendet ihr `ClassFieldDecoratorContext`
+  * Ansonsten `DecoratorContext` oder Union-Typ mit den unterstützen Typen
+    * Dann könnt ihr über `context.kind` zur Laufzeit prüfen, wie bzw. wo der Dekorator verwendet wurde
+    * Die Prüfung dient als Type Guard:
+    * ```typescript
+      function log(value: any, ctx: ClassMemberDecoratorContext) {
+        if (ctx.kind === "field") {
+          // ctx hier ClassFieldDecoratorContext
+        } else if (ctx.kind === "method") {
+          // ctx hier ClassMethodDecoratorContext
+        }
+      }
+      ```
+  
+---
+### Decorators an Feldern
+
+* Der `value` ist bei Felder immer `undefined`
+* Um den Wert zu lesen oder zu verändern, muss der Dekorator eine `initalizerFunction` zurückliefern
+* Diese Funktion bekommt den initialen Wert (wie in der Deklaration angegeben) übergeben und
+kann einen neuen Wert zurückliefern
+* ```typescript
+  function increase(value: undefined, ctx: ClassFieldDecoratorContext) {
+    return (initialValue: any) =>
+      typeof initialValue === "number" ? initialValue + 1 : initialValue;
+  }
+
+  class Person {
+    @increase
+    age: 32
+
+    @increase
+    name: "Klaus"
+  }
+
+  const p = new Person();
+  p.age; // 33
+  p.name; // Klaus
+  ```
+---
+### Decorator an Methoden
+<!-- .slide: class="left" -->
+* Bei Dekoraten an Methoden ist der `value` eine `Function`
+* `kind` am `context` ist `method`
+* Der Dekorator kann eine neue Funktion zurückliefern. 
+  * Diese Funktion überschreibt dann die ursprüngliche Funktion
+  * ```typescript
+    function trace(value: Function, ctx: ClassMethodDecoratorContext) {
+      return (...args: any) => {
+        try {
+          console.log(`Method ${String(ctx.name)} with args ${args} invoked.`);
+          return value(...args);
+        } finally {
+          console.log(`Method ${String(ctx.name)} returned.`);
+        }
+      };
+    }
+  ```
+  * ```typescript
+    class Person {
+      @trace
+      sayHello(name: string) { console.log("Hello", name) }
+    }
+    ```
+  * ```typescript
+    new Person().sayHello("Klaus"); 
+      // Method sayHello with args Klaus invoked
+      // Hello, Klaus
+      // Method sayHello returned.
+    ```
+* Achtung! Method-Dekoratoren gelten nicht für `get` bzw. `set`-Methoden!
+* ```typescript
+  class Person {
+    @trace // ERR: Type '"getter"' is not assignable to type '"method"'
+    get age() { return 32 }
+  }
+  ```
+---
+### Dekoratoren für getter und setter
+* Für Accessor-Methoden ("getter" bzw. "setter") gibt es jeweils eigene Dekorator-Typen
+* Diese bekommen als `value` die getter- bzw- setter-Methode übergeben
+* `kind` in `context` ist `"getter" bzw. `"setter"` 
+* Zurückgeliefert werden kann eine neue getter- oder setter-Funktion
+* Die Original-Funktion muss mit `call` aufgerufen werden, um das `this`-Objekt
+  korrekt zu setzen!
+* ```typescript
+  function uppercaseOnly(setter: Function, ctx: ClassSetterDecoratorContext) {
+    return function uppercaseSetter(this: any, args: any) {
+      // this hier die Instanz der Klasse
+      if (typeof args === "string") {
+        return setter.call(this, args.toUpperCase());
+      }
+      return setter.call(this, args);
+    };
+  }
+  ```
+* ```typescript
+  class Person {
+    #name;
+
+    @uppercaseOnly
+    set name(n: string) {
+      this.#name = n;
+    }
+    get name() { return this.#name; }
+  }
+
+  const p = new Person();
+  p.name = "Klaus";
+  console.log(p.name); // KLAUS
+  ```
+  
+
+---
+### Decorator Factories
+
+* Ihr könnt als Dekorator nicht nur eine _Funktion_, sondern auch einen _Funktionsaufruf_ hinschreiben
+* In diesem Fall muss dann der Funktionsaufruf die Dekorator-Funktion zurückliefern
+* Damit könnt ihr "Factories" für Dekoratoren bauen, die z.B. zusätzliche Parameter entgegennehmen
+* ```typescript
+  function traceLevel(level: "warn" | "info" | "debug") {
+    return function traceDecorator(value: Function, ctx: ClassMethodDecoratorContext) {
+      return (...args: any) => {
+        try {
+          console[level](`Method ${String(ctx.name)} with args ${args} invoked.`);
+          return value(...args);
+        } finally {
+          console[level](`Method ${String(ctx.name)} returned.`);
+        }
+      };
+    };
+  }
+  ```
+* ```typescript
+  class Person {
+
+    @trace("warn")
+    sayHello() { }
+
+    @trace("debug")
+    greet() { } 
+  }
+  ```
+* ```typescript
+  const p = new Person();
+  p.sayHello(); // Ausgabe in Dekorator auf console.warn  
+  p.greet(); // Ausgabe in Dekorator auf console.debug  
+  ```
+    
+  
+
+  
+          </textarea>
         </section>
 
         <section>
