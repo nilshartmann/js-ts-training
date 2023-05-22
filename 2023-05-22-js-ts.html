@@ -110,7 +110,7 @@
           <p class="fragment">Bitte schaltet Euer Video ein 🙏</p>
           <p class="fragment">Motto: Es gibt keine dummen Fragen!</p>
           <p class="fragment">
-            Bemerkbar machen per Audio, Chat oder Zoom Reaktion "Hand erheben"
+            Beteiligt Euch! Macht euch bemerkbar per Audio, Chat oder Zoom Reaktion "Hand erheben"
             <span class="fragment"
               ><img width="50%" src="slides/images/zoom-reaktionen.png"
             /></span>
@@ -238,11 +238,6 @@
   * (mit einer kleinen Ausnahme, den enums)
 * Historisch hat(te) TypeScript noch mehr Features, die spielen aber praktisch keine Rolle mehr
   * Klassen z.B. gibt's jetzt auch in JavaScript
----
-### TypeScript: implizite und explizite Typen
-
----
-###
   
           </textarea>
         </section>
@@ -313,10 +308,33 @@ if ("" == false) {
           </code></pre>
 
           <p class="fragment"><b>Empfehlung</b>: immer triple-equal-operator verwenden!</p>
-          <p class="fragment">
-            Mehr Spaß mit type coercion:
-            <a href="https://github.com/denysdovhan/wtfjs">WTF JS</a>
-          </p>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+### Coercion
+
+* Type Coercion ist das _implizite_ Konvertieren eines Typs in einen anderen
+* Es gibt diverse (unübersichtliche) Regeln dafür in die JavaScript
+* Die Regeln sind abhängig von Operator und Typ des Operanden
+* Hier gibt es eine gute [Übersicht](https://medium.com/front-end-weekly/implicit-coercion-in-javascript-5077ad5510d)
+* Wenn zum Beispiel ein `string` und eine `number` "addiert" werden, wird die `number` in den String konvertiert:
+* ```typescript
+  let a = 1 + "1";  // 11
+  ```
+* Bei allen anderen mathematichen Operatoren wird hingegen der String in eine Number konvertiert:
+* ```typescript
+  let b = 1 - "1"; // 0
+  ```
+* Viele im Internet gehandelte Probleme sind exotischer Natur, die man normalerweise ohnehin nicht machen würde
+  * ```typescript
+    let c = [] + 1; // 1
+    let d = {} + true // "[object Object]true"
+    ```
+* Launinger Vortrag zu dem Thema: [WTF JS](https://github.com/denysdovhan/wtfjs)    
+* Im richtigen Leben bewahrt uns TypeScript in vielen Fällen vor der falschen Verwendung der Typen
+
+  </textarea
+          >
         </section>
 
         <!-- ============================================================================= -->
